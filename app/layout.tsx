@@ -4,6 +4,10 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
+ 
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +32,7 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="discord-app"
           >
+            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
             {children}
           </ThemeProvider>
         </body>

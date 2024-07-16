@@ -40,7 +40,7 @@ const InitialModal = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            imageUrl: ""
+            imageUrl: "",
         }
     })
 
