@@ -9,13 +9,14 @@ export async function POST(req: Request) {
     console.log("calling server")
     try {
         const { name, imageUrl } = await req.json();
+        console.log("imageUrl", imageUrl)
         const profile = await currentProfile()
         if (!profile) {
             return new NextResponse("Unauthorized", { status: 401 })
         }
-        const server = db.server.create({
+        const server = await db.server.create({
             data: {
-                imageUrl: imageUrl,
+                imageUrl,
                 name,
                 inviteCode: uuidv4(),
                 profileId: profile.id,
@@ -31,9 +32,10 @@ export async function POST(req: Request) {
                 }
             }
         })
-        return NextResponse.json(server)
+        console.log("server" , server)
+        return  NextResponse.json(server)
     } catch (error) {
         console.log("SERVER POST", error)
-        return new NextResponse("Internal Error", { status: 500 })
+        return new NextResponse("Internal Error", { status: 500  })
     }
 }

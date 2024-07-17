@@ -30,9 +30,9 @@ const formSchema = z.object({
     name: z.string().min(1, {
         message: "Server name is required"
     }),
-    // imageUrl: z.string().min(1, {
-    //     message: "Server image is required"
-    // })
+    imageUrl: z.string().min(1, {
+        message: "Server image is required"
+    })
 })
 
 
@@ -54,6 +54,7 @@ const InitialModal = () => {
     const router = useRouter()
 
     const onSubmit = async (value: z.infer<typeof formSchema>) => {
+        console.log("Values" , value)
         try {
             await axios.post("/api/servers", value)
             // router.refresh()
