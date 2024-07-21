@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -24,7 +24,15 @@ import {
 import { Input } from "@/components/ui/input"
 import axios from "axios"
 import { useRouter } from 'next/navigation'
-import FileUpload from '../file-upload'
+import { useModal } from '@/hooks/use-modal-store'
+import dynamic from 'next/dynamic'
+// import FileUpload from '../file-upload'
+// import { FileUpload } from '../file-upload'
+
+const FileUpload = dynamic(() => import('../file-upload'), {
+    ssr: true,
+    loading: () => <div>Loading file upload component...</div>
+});
 
 
 const formSchema = z.object({
@@ -38,9 +46,22 @@ const formSchema = z.object({
 
 
 
-const InitialModal = () => {
+const CreateServerModal = () => {
+
+    const { isOpen, onClose, type } = useModal();
+
+    const isModalOpen = isOpen && type === "CreateServer";
+
+
+
     const [isMounted, setIsMounted] = useState(false);
-    if (!isMounted) { return null }
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+
+
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -50,36 +71,44 @@ const InitialModal = () => {
         }
     })
 
+
     const isLoading = form.formState.isLoading;
 
     const router = useRouter()
 
     const onSubmit = async (value: z.infer<typeof formSchema>) => {
-        console.log("Values" , value)
+        console.log("Values", value)
         try {
             await axios.post("/api/servers", value)
-            // router.refresh()
             form.reset()
-            // window.location.reload()
         } catch (error) {
             console.log(error)
         }
     }
 
+    const handleClose = () => {
+        form.reset()
+        onClose()
+    }
+
+    if (!isMounted) {
+        return null
+    }
+
 
     return (
         <>
-            <Dialog open>
-                <DialogContent className="bg-white text-black overflow-hidden">
-                    <DialogHeader className='pt-8 px-6'>
-                        <DialogTitle className='text-2xl text-center font-bold'>Customize Your Server</DialogTitle>
-                        <DialogDescription className='text-center text-zinc-500'>
-                            Give your Server a Personality with a Name and you can customize it later.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <div>
+            {isMounted && (
+                <Dialog open={isModalOpen} onOpenChange={handleClose}>
+                    <DialogContent className="bg-white dark:bg-#1E1F22  text-black overflow-hidden">
+                        <DialogHeader className='pt-8 px-6'>
+                            <DialogTitle className='text-2xl text-center font-bold'>Customize Your Server</DialogTitle>
+                            <DialogDescription className='text-center text-zinc-500'>
+                                Give your Server a Personality with a Name and you can customize it later.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
                                 <div className='flex items-center justify-center text-center'>
                                     <FormField
                                         control={form.control}
@@ -118,18 +147,19 @@ const InitialModal = () => {
                                     )}
                                 />
 
-                            </div>
-                            <DialogFooter>
-                                <Button variant={'primary'} type="submit">
-                                    Create
-                                </Button>
-                            </DialogFooter>
-                        </form>
-                    </Form>
-                </DialogContent>
-            </Dialog>
+
+                                <DialogFooter>
+                                    <Button variant={'primary'} type="submit">
+                                        Create
+                                    </Button>
+                                </DialogFooter>
+                            </form>
+                        </Form>
+                    </DialogContent>
+                </Dialog>
+            )}
         </>
     )
 }
 
-export default InitialModal
+export default CreateServerModal
