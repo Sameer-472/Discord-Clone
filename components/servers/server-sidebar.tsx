@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { ChannelType } from "@prisma/client";
 import { channel } from "diagnostics_channel";
 import { redirect } from "next/navigation";
+import { ServerHeader } from "./server-header";
 
 interface serverSideBarProps {
     serverId: string;
@@ -31,21 +32,25 @@ export const ServerSideBar = async ({ serverId }: serverSideBarProps) => {
                     profile: true
                 },
                 orderBy: {
-                    role : "asc"
+                    role: "asc"
                 }
             }
         }
     })
 
-    const textChannels = server?.channels.filter((channel)=> channel.type === ChannelType.Text)
-    const audioChannels = server?.channels.filter((channel)=> channel.type === ChannelType.AUDIO)
-    const videoChannels = server?.channels.filter((channel)=> channel.type === ChannelType.VIDEO)
-    const members = server?.members.filter((member)=> member.profileId === profile.id)
-    const role = server?.members.find((member)=> member.profileId === profile.id)?.role;
+    const textChannels = server?.channels.filter((channel) => channel.type === ChannelType.Text)
+    const audioChannels = server?.channels.filter((channel) => channel.type === ChannelType.AUDIO)
+    const videoChannels = server?.channels.filter((channel) => channel.type === ChannelType.VIDEO)
+    const members = server?.members.filter((member) => member.profileId === profile.id)
+    const role = server?.members.find((member) => member.profileId === profile.id)?.role;
+
+    if(!server){
+        return redirect("/");
+    }
     return (
         <>
-            <div>
-                Side bar
+            <div className="flex flex-col h-full text-primary w-full dark:bg-[#2b2d31] bg-[#f2f3f5]">
+               <ServerHeader server={server} role={role}/>
             </div>
         </>
     )
