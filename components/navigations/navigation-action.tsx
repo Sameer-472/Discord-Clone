@@ -7,7 +7,7 @@ import CreateServerModal from '../modals/create-server-modal'
 
 const NavigationAction = () => {
 
-    const { onOpen } = useModal()
+    const { onOpen } = useModal();
 
     return (
         // <div >

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 const SetUpPage = async()=>{
     const profile = await InitialProfile();
 
+    console.log("profile" , profile);
     const server = await db.server.findFirst({
         where: {
             members:{
@@ -15,6 +16,8 @@ const SetUpPage = async()=>{
             }
         }
     })
+
+    console.log("serverId" , server)
 
     if(server){
         return redirect(`/servers/${server?.id}`)

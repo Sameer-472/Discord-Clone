@@ -39,8 +39,6 @@ const formSchema = z.object({
 
 
 const InitialModal = () => {
-    const [isMounted, setIsMounted] = useState(false);
-    if (!isMounted) { return null }
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -55,7 +53,6 @@ const InitialModal = () => {
     const router = useRouter()
 
     const onSubmit = async (value: z.infer<typeof formSchema>) => {
-        console.log("Values" , value)
         try {
             await axios.post("/api/servers", value)
             // router.refresh()
@@ -69,8 +66,8 @@ const InitialModal = () => {
 
     return (
         <>
-            <Dialog open>
-                <DialogContent className="bg-white text-black overflow-hidden">
+            <Dialog open={true}>
+                <DialogContent className="bg-white text-black">
                     <DialogHeader className='pt-8 px-6'>
                         <DialogTitle className='text-2xl text-center font-bold'>Customize Your Server</DialogTitle>
                         <DialogDescription className='text-center text-zinc-500'>
