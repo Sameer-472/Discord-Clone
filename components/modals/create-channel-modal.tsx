@@ -75,7 +75,7 @@ const CreateChannelModal = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            type: ""
+            type: ChannelType.Text
         }
     })
 
