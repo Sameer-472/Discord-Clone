@@ -24,14 +24,14 @@ export const ServerSection = ({label , role , sectionType , channelType , server
             </p>
             {role !== MemberRole.GUEST && sectionType === "channels" && (
                 <ActionToolTip label="Create Channel" side="top">
-                    <button onClick={()=> onOpen("createChannel")} className="text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition">
+                    <button onClick={()=> onOpen("createChannel" , {channelType})} className="text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition">
                         <Plus className="w-4 h-4"/>
                     </button>
                 </ActionToolTip>
             )}
             {role == MemberRole.ADMIN && sectionType === "members" && (
                 <ActionToolTip label="Manage Members" side="top">
-                    <button onClick={()=> onOpen("members" , {server})} className="text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition">
+                    <button onClick={()=> onOpen("members" , {server})} className="text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition w-100">
                         <Settings className="w-4 h-4"/>
                     </button>
                 </ActionToolTip>

@@ -36,6 +36,7 @@ import {
 import { ChannelType } from '@prisma/client'
 
 import qs from "query-string"
+import { channel } from 'diagnostics_channel'
 
 const FileUpload = dynamic(() => import('../file-upload'), {
     ssr: true,
@@ -56,7 +57,7 @@ const formSchema = z.object({
 
 const CreateChannelModal = () => {
 
-    const { isOpen, onClose, type } = useModal();
+    const { isOpen, onClose, type, data } = useModal();
 
     const isModalOpen = isOpen && type === "createChannel";
 
@@ -68,14 +69,14 @@ const CreateChannelModal = () => {
         setIsMounted(true);
     }, []);
 
-
+    const { channelType } = data
 
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            type: ChannelType.Text
+            type: ChannelType.Text || channelType
         }
     })
 
@@ -88,10 +89,10 @@ const CreateChannelModal = () => {
     const onSubmit = async (value: z.infer<typeof formSchema>) => {
         try {
             const url = qs.stringifyUrl({
-               url: "/api/channels",
-               query: {
-                serverId: params?.serverId
-               } 
+                url: "/api/channels",
+                query: {
+                    serverId: params?.serverId
+                }
             })
             await axios.post(url, value)
             form.reset()
@@ -110,6 +111,16 @@ const CreateChannelModal = () => {
     if (!isMounted) {
         return null
     }
+
+    // useEffect(() => {
+    //     if (channelType) {
+    //         form.setValue("type", channelType)
+    //     }
+    //     else {
+    //         form.setValue("type", ChannelType.Text)
+    //     }
+    // }, [channelType , form])
+
 
 
     return (
@@ -154,7 +165,7 @@ const CreateChannelModal = () => {
                                                     >
                                                         <SelectValue placeholder="Select a channel Type" />
                                                         <SelectContent>
-                                                            {Object.values(ChannelType).map((type)=>(
+                                                            {Object.values(ChannelType).map((type) => (
                                                                 <SelectItem key={type} className='capitalize' value={type}>
                                                                     {type.toLowerCase()}
                                                                 </SelectItem>
