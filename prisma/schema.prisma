@@ -53,6 +53,9 @@ model Member {
   role      MemberRole @default(GUEST)
   profileId String
   serverId  String
+  Messagge Message[]
+  conversationInitiated Conversation[] @relation("MemberOne")
+  consersationReceived Conversation[] @relation("MemberTwo")
   server    Server     @relation(fields: [serverId], references: [id], onDelete: Cascade)
   profile   Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
@@ -74,6 +77,7 @@ model Channel {
   type      ChannelType @default(Text)
   profileId String
   serverId  String
+  messages Message[]
   server    Server      @relation(fields: [serverId], references: [id], onDelete: Cascade)
   profile   Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
   createdAt DateTime    @default(now())
@@ -81,4 +85,39 @@ model Channel {
 
   @@index([serverId])
   @@index([profileId])
+}
+
+
+model Message {
+  id String @id @default(uuid())
+  content String @db.Text
+  fileUrl String? @db.Text
+  memberId String
+  member Member @relation(fields: [memberId] ,  references: [id] , onDelete: Cascade)
+
+  channelId String
+  channel Channel @relation(fields: [channelId] , references: [id] , onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([channelId])
+  @@index([memberId])
+}
+
+model Conversation {
+  id String @id @default(uuid())
+  memberOneId String
+  memberOne Member @relation("MemberOne" , fields: [memberOneId] , references: [id] , onDelete: Cascade)
+  memberTwoId String
+  memberTwo Member @relation("MemberTwo" , fields: [memberTwoId] , references: [id] , onDelete: Cascade)
+
+  @@index([memberOneId])
+  @@index([memberTwoId])
+
+  @@unique([memberOneId , memberTwoId])
+  
 }
