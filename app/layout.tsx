@@ -9,6 +9,7 @@ import { ourFileRouter } from "./api/uploadthing/core";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import CreateServerModal from "@/components/modals/create-server-modal";
+import { SocketProvider } from "@/components/providers/socket-provider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -34,9 +35,12 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="discord-app"
           >
-            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            {children}
-            <ModalProvider/>
+            <SocketProvider>
+              <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+              {children}
+              <ModalProvider />
+
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>
