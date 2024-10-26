@@ -81,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseS
         return res.status(200).json(message);
 
     } catch (error) {
-        console.log("error while sending message" , error);
-        return res.status(500).json({ message: "Internal Error" , error});
+        console.log(error);
+        return res.status(500).json({ message: "Internal Error" });
     }
 }
