@@ -14,8 +14,10 @@ export const SocketIndicator = () => {
             </Badge>
         )
     }
-    <Badge variant={"outline"} className="bg-emerald-600 text-white border-none">
-        LiveL real-time
-    </Badge>
+    return (
+        <Badge variant={"outline"} className="bg-emerald-600 text-white border-none">
+            LiveL real-time
+        </Badge>
+    )
 
 }
