@@ -7,7 +7,7 @@ interface ModalData {
     server?: Server;
     channel: Channel;
     channelType: ChannelType;
-    apiUrl? :string;
+    apiUrl?:string;
     query?: Record<string , any>
 }
 
